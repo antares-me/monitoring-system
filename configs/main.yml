@@ -1,5 +1,5 @@
 http:
-  port: 8282
+  port: 80
   maxHeaderBytes: 1
   readTimeout: 10s
   writeTimeout: 10s

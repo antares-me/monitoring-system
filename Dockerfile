@@ -6,12 +6,12 @@ RUN go build -o ./monitoring ./cmd/monitoring-system && go build -o ./generator 
 
 FROM alpine
 RUN adduser -S -D -H -h /app appuser
+RUN chown -R appuser /app
+USER appuser
 COPY --from=builder /build/generator /build/monitoring /app/
 COPY web /app/web/
 COPY configs /app/configs/
 COPY wrapper.sh /app/
-RUN chown -R appuser /app
-USER appuser
 WORKDIR /app
-EXPOSE 8282
+EXPOSE 80
 CMD ["./wrapper.sh", "&"]
