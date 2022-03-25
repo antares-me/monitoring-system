@@ -6,4 +6,4 @@ build:
 
 run:
   web: monitoring
-  worker: generator
+  # worker: generator
