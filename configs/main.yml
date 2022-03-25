@@ -1,0 +1,20 @@
+http:
+  port: 8282
+  maxHeaderBytes: 1
+  readTimeout: 10s
+  writeTimeout: 10s
+
+dataFilePath:
+  sms: /app/sms.data
+  email: /app/email.data
+  voiceCall: /app/voice.data
+  billing: /app/billing.data
+
+dataUrl:
+  mms: http://localhost:8383/mms
+  incident: http://localhost:8383/accendent
+  support: http://localhost:8383/support
+
+cache:
+  expiration: 30s
+  cleanupInterval: 10s

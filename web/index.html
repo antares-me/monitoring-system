@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>Communication Data</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <script src='main.js'></script>
+    </head>
+    <body>
+        <div class="container">
+            <section class="fixed-container errors-container">
+                <h2>Errors</h2>
+            </section>
+            <div class="row">
+                <div class="col">
+                    <h2>Voice Call</h2>
+                    <table class="table table-striped voice-calls">
+                        <thead>
+                            <tr>
+                                <th scope="col">Country</th>
+                                <th scope="col">Bandwidth</th>
+                                <th scope="col">Response Time</th>
+                                <th scope="col">Provider</th>
+                                <th scope="col">Connection Stability</th>
+                                <th scope="col">TTFB</th>
+                                <th scope="col">Voice Purity</th>
+                                <th scope="col">Median of Call Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="empty">
+                                <td colspan="8" class="text-center">No voice call data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    <h2>SMS</h2>
+                    <table class="table table-striped sms">
+                        <thead>
+                            <tr>
+                                <th scope="col">Country</th>
+                                <th scope="col">Bandwidth</th>
+                                <th scope="col">Response Time</th>
+                                <th scope="col">Provider</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="empty">
+                                <td colspan="4" class="text-center">No SMS data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-2">
+                    <h2>Support</h2>
+                    <div class="support-info">
+                        <p class="support-time"></p>
+                        <p>minutes</p>
+                    </div>
+                    <small>Average Mailing Time</small>
+                </div>
+                <div class="col-5">
+                    <h2>MMS</h2>
+                    <table class="table table-striped mms">
+                        <thead>
+                            <tr>
+                                <th scope="col">Country</th>
+                                <th scope="col">Bandwidth</th>
+                                <th scope="col">Response Time</th>
+                                <th scope="col">Provider</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="empty">
+                                <td colspan="4" class="text-center">No MMS data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                <div>
+                    <h2>Billing</h2>
+                    <table class="billing">
+                        <tbody>
+                            <tr class="empty">
+                                <td colspan="2">No billing data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h2>E-mail</h2>
+                    <div class="charts"></div>
+                </div>
+                <div style="width: 100%;">
+                    <h2>Incidents History</h2>
+                    <table class="incidents" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 70%;">Topic</th>
+                                <th style="width: 30%;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="empty">
+                                <td colspan="2">No incidents data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script src='chart.min.js'></script>
+    </body>
+</html>
