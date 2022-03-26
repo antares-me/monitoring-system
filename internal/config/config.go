@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -63,11 +64,17 @@ func Init(path string) (*Config, error) {
 		return nil, err
 	}
 
+	if err := parseEnv(); err != nil {
+		return nil, err
+	}
+
 	var cfg Config
 	if err := unmarshal(&cfg); err != nil {
 		return nil, err
 	}
 
+	setFromEnv(&cfg)
+	fmt.Println(cfg)
 	return &cfg, nil
 }
 
@@ -114,4 +121,19 @@ func populateDefaults() {
 	viper.SetDefault("dataUrl.support", defaultDataUrlSupport)
 	viper.SetDefault("cache.expiration", defaultCacheExpiration)
 	viper.SetDefault("cache.cleanupInterval", defaultCacheCleanupInterval)
+}
+
+func setFromEnv(cfg *Config) {
+	cfg.HTTP.Port = viper.GetString("PORT")
+}
+
+func parseEnv() error {
+	return parseHerokuEnvVariables()
+}
+
+func parseHerokuEnvVariables() error {
+	if err := viper.BindEnv("PORT"); err != nil {
+		return err
+	}
+	return nil
 }
