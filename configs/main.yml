@@ -5,10 +5,10 @@ http:
   writeTimeout: 10s
 
 dataFilePath:
-  sms: /app/sms.data
-  email: /app/email.data
-  voiceCall: /app/voice.data
-  billing: /app/billing.data
+  sms: /home/antares/MEGA/Go/monitoring-system/sms.data
+  email: /home/antares/MEGA/Go/monitoring-system/email.data
+  voiceCall: /home/antares/MEGA/Go/monitoring-system/voice.data
+  billing: /home/antares/MEGA/Go/monitoring-system/billing.data
 
 dataUrl:
   mms: http://localhost:8383/mms

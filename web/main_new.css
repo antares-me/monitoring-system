@@ -1,0 +1,55 @@
+.true-value {
+    width: 50px;
+    background-image: url('true.png');
+    background-repeat: no-repeat;
+    background-size: 16px;
+    background-position: center center;
+}
+
+.false-value {
+    width: 50px;
+    background-image: url('false.png');
+    background-repeat: no-repeat;
+    background-size: 16px;
+    background-position: center center;
+}
+
+.charts {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.charts canvas {
+    width: 100px;
+    height: 100px;
+    margin-right: 30px
+}
+
+.support-info {
+    border: 1px solid gray;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.support-time {
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    margin: 15px 0 0;
+}
+
+.errors-container {
+    display: none;
+}
+
+.errors-container ul {
+    font-weight: bold;
+    color: red;
+}
