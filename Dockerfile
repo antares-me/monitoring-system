@@ -14,4 +14,3 @@ RUN chown -R appuser /app
 USER appuser
 WORKDIR /app
 CMD ["./wrapper.sh", "&"]
-EXPOSE 80
