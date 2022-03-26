@@ -4,6 +4,6 @@ build:
   docker:
     web: Dockerfile
 
-run:
-  web: monitoring
+# run:
+#   web: monitoring
   # worker: generator
