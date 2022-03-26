@@ -13,5 +13,5 @@ COPY wrapper.sh /app/
 RUN chown -R appuser /app
 USER appuser
 WORKDIR /app
-EXPOSE 80
 CMD ["./wrapper.sh", "&"]
+EXPOSE 80
