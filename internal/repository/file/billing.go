@@ -4,6 +4,7 @@ import (
 	"context"
 	"io/ioutil"
 	"math"
+	"sync"
 
 	"antares-me/monitoring-system/internal/domain"
 
@@ -50,15 +51,16 @@ func (r *BillingRepo) parseData(ctx context.Context) error {
 	return nil
 }
 
-func (r *BillingRepo) GetResultData(ctx context.Context) (domain.BillingData, error) {
+func (r *BillingRepo) GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, e *[]error) {
+	defer wg.Done()
 	if val, has := r.cache.Get("billing"); has == true {
-		v := val.(domain.BillingData)
-		return v, nil
+		res.Billing = val.(domain.BillingData)
 	} else {
 		if err := r.parseData(ctx); err != nil {
-			return domain.BillingData{}, err
+			*e = append(*e, err)
+			return
 		}
 		r.cache.Set("billing", r.data, 0)
-		return r.data, nil
+		res.Billing = r.data
 	}
 }

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"sync"
 
 	"antares-me/monitoring-system/internal/domain"
 
@@ -96,19 +97,20 @@ func (r *MmsRepo) sortByCountry() []domain.MMSData {
 	return data
 }
 
-func (r *MmsRepo) GetResultData(ctx context.Context) ([][]domain.MMSData, error) {
+func (r *MmsRepo) GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, e *[]error) {
+	defer wg.Done()
 	if val, has := r.cache.Get("mms"); has == true {
-		v := val.([][]domain.MMSData)
-		return v, nil
+		res.MMS = val.([][]domain.MMSData)
 	} else {
 		data := [][]domain.MMSData{}
 		if err := r.parseData(ctx); err != nil {
-			return data, err
+			*e = append(*e, err)
+			return
 		}
 		r.replaceCountryCodes()
 		data = append(data, r.sortByProvider())
 		data = append(data, r.sortByCountry())
 		r.cache.Set("mms", data, 0)
-		return data, nil
+		res.MMS = data
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"io"
 	"math"
 	"net/http"
+	"sync"
 
 	"antares-me/monitoring-system/internal/domain"
 
@@ -46,16 +47,17 @@ func (r *SupportRepo) parseData(ctx context.Context) error {
 	return nil
 }
 
-func (r *SupportRepo) GetResultData(ctx context.Context) ([]int, error) {
+func (r *SupportRepo) GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, e *[]error) {
+	defer wg.Done()
 	if val, has := r.cache.Get("support"); has == true {
-		v := val.([]int)
-		return v, nil
+		res.Support = val.([]int)
 	} else {
 		timePerTicket := math.Round(60 / 18)
 		ticketSumm := 0
 		data := make([]int, 2)
 		if err := r.parseData(ctx); err != nil {
-			return data, err
+			*e = append(*e, err)
+			return
 		}
 		for _, v := range r.data {
 			ticketSumm += v.ActiveTickets
@@ -70,6 +72,6 @@ func (r *SupportRepo) GetResultData(ctx context.Context) ([]int, error) {
 			data[0] = 2
 		}
 		r.cache.Set("support", data, 0)
-		return data, nil
+		res.Support = data
 	}
 }

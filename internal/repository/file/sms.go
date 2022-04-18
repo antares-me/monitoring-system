@@ -6,6 +6,7 @@ import (
 	"log"
 	"sort"
 	"strings"
+	"sync"
 
 	"antares-me/monitoring-system/internal/domain"
 
@@ -18,6 +19,11 @@ type SmsRepo struct {
 	file  string
 	data  []domain.SMSData
 	cache *cache.Cache
+}
+
+type smsRes struct {
+	data  [][]domain.SMSData
+	error error
 }
 
 func NewSmsRepo(fp string, c *cache.Cache) *SmsRepo {
@@ -93,19 +99,20 @@ func (r *SmsRepo) sortByCountry() []domain.SMSData {
 	return data
 }
 
-func (r *SmsRepo) GetResultData(ctx context.Context) ([][]domain.SMSData, error) {
+func (r *SmsRepo) GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, e *[]error) {
+	defer wg.Done()
 	if val, has := r.cache.Get("sms"); has == true {
-		v := val.([][]domain.SMSData)
-		return v, nil
+		res.SMS = val.([][]domain.SMSData)
 	} else {
 		data := [][]domain.SMSData{}
 		if err := r.parseData(ctx); err != nil {
-			return data, err
+			*e = append(*e, err)
+			return
 		}
 		r.replaceCountryCodes()
 		data = append(data, r.sortByProvider())
 		data = append(data, r.sortByCountry())
 		r.cache.Set("sms", data, 0)
-		return data, nil
+		res.SMS = data
 	}
 }

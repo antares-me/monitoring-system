@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"sync"
 
 	"antares-me/monitoring-system/internal/config"
 	"antares-me/monitoring-system/internal/domain"
@@ -12,31 +13,31 @@ import (
 )
 
 type Sms interface {
-	GetResultData(ctx context.Context) ([][]domain.SMSData, error)
+	GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, err *[]error)
 }
 
 type Mms interface {
-	GetResultData(ctx context.Context) ([][]domain.MMSData, error)
+	GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, err *[]error)
 }
 
 type VoiceCall interface {
-	GetResultData(ctx context.Context) ([]domain.VoiceCallData, error)
+	GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, err *[]error)
 }
 
 type Email interface {
-	GetResultData(ctx context.Context) (map[string][][]domain.EmailData, error)
+	GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, err *[]error)
 }
 
 type Incident interface {
-	GetResultData(ctx context.Context) ([]domain.IncidentData, error)
+	GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, err *[]error)
 }
 
 type Billing interface {
-	GetResultData(ctx context.Context) (domain.BillingData, error)
+	GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, err *[]error)
 }
 
 type Support interface {
-	GetResultData(ctx context.Context) ([]int, error)
+	GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, err *[]error)
 }
 
 type Repositories struct {

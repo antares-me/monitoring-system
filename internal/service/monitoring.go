@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"log"
+	"sync"
 
 	"antares-me/monitoring-system/internal/domain"
 	"antares-me/monitoring-system/internal/repository"
@@ -46,36 +47,24 @@ func (s *MonitoringService) getResultData(ctx context.Context) (domain.ResultSet
 	var (
 		status     bool = true
 		resultSetT domain.ResultSetT
-		err        error
+		err        []error
 	)
-	if resultSetT.SMS, err = s.sms.GetResultData(ctx); err != nil {
-		log.Println(err)
-		status = false
-	}
-	if resultSetT.MMS, err = s.mms.GetResultData(ctx); err != nil {
-		log.Println(err)
-		status = false
-	}
-	if resultSetT.VoiceCall, err = s.voicecall.GetResultData(ctx); err != nil {
-		log.Println(err)
-		status = false
-	}
-	if resultSetT.Email, err = s.email.GetResultData(ctx); err != nil {
-		log.Println(err)
-		status = false
-	}
-	if resultSetT.Billing, err = s.billing.GetResultData(ctx); err != nil {
-		log.Println(err)
-		status = false
-	}
-	if resultSetT.Support, err = s.support.GetResultData(ctx); err != nil {
-		log.Println(err)
-		status = false
-	}
-	if resultSetT.Incident, err = s.incident.GetResultData(ctx); err != nil {
-		log.Println(err)
-		status = false
-	}
 
+	wg := &sync.WaitGroup{}
+	wg.Add(7)
+	go s.sms.GetResultData(ctx, wg, &resultSetT, &err)
+	go s.mms.GetResultData(ctx, wg, &resultSetT, &err)
+	go s.voicecall.GetResultData(ctx, wg, &resultSetT, &err)
+	go s.email.GetResultData(ctx, wg, &resultSetT, &err)
+	go s.billing.GetResultData(ctx, wg, &resultSetT, &err)
+	go s.support.GetResultData(ctx, wg, &resultSetT, &err)
+	go s.incident.GetResultData(ctx, wg, &resultSetT, &err)
+	wg.Wait()
+	if len(err) > 0 {
+		for _, e := range err {
+			log.Printf("Error: %s\n", e)
+		}
+		status = false
+	}
 	return resultSetT, status
 }

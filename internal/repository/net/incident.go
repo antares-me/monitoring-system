@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"sort"
+	"sync"
 
 	"antares-me/monitoring-system/internal/domain"
 
@@ -46,18 +47,19 @@ func (r *IncidentRepo) parseData(ctx context.Context) error {
 	return nil
 }
 
-func (r *IncidentRepo) GetResultData(ctx context.Context) ([]domain.IncidentData, error) {
+func (r *IncidentRepo) GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, e *[]error) {
+	defer wg.Done()
 	if val, has := r.cache.Get("incident"); has == true {
-		v := val.([]domain.IncidentData)
-		return v, nil
+		res.Incident = val.([]domain.IncidentData)
 	} else {
 		if err := r.parseData(ctx); err != nil {
-			return r.data, err
+			*e = append(*e, err)
+			return
 		}
 		sort.SliceStable(r.data, func(i, j int) bool {
 			return r.data[i].Status < r.data[j].Status
 		})
 		r.cache.Set("incident", r.data, 0)
-		return r.data, nil
+		res.Incident = r.data
 	}
 }

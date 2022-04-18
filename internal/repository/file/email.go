@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 
 	"antares-me/monitoring-system/internal/domain"
 
@@ -74,14 +75,15 @@ func validateEmailFields(fields []string) bool {
 	return true
 }
 
-func (r *EmailRepo) GetResultData(ctx context.Context) (map[string][][]domain.EmailData, error) {
+func (r *EmailRepo) GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, e *[]error) {
+	defer wg.Done()
 	if val, has := r.cache.Get("email"); has == true {
-		v := val.(map[string][][]domain.EmailData)
-		return v, nil
+		res.Email = val.(map[string][][]domain.EmailData)
 	} else {
 		data := make(map[string][][]domain.EmailData)
 		if err := r.parseData(ctx); err != nil {
-			return data, err
+			*e = append(*e, err)
+			return
 		}
 		byCountryMap := make(map[string][]domain.EmailData)
 		for _, v := range r.data {
@@ -95,6 +97,6 @@ func (r *EmailRepo) GetResultData(ctx context.Context) (map[string][][]domain.Em
 			data[country] = append(data[country], countrySlice[len(countrySlice)-3:])
 		}
 		r.cache.Set("email", data, 0)
-		return data, nil
+		res.Email = data
 	}
 }

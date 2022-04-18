@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
@@ -74,7 +73,6 @@ func Init(path string) (*Config, error) {
 	}
 
 	setFromEnv(&cfg)
-	fmt.Println(cfg)
 	return &cfg, nil
 }
 

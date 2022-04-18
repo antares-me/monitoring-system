@@ -6,6 +6,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"sync"
 
 	"antares-me/monitoring-system/internal/domain"
 
@@ -90,15 +91,16 @@ func validateVoiceCallFields(fields []string) bool {
 	return true
 }
 
-func (r *VoiceCallRepo) GetResultData(ctx context.Context) ([]domain.VoiceCallData, error) {
+func (r *VoiceCallRepo) GetResultData(ctx context.Context, wg *sync.WaitGroup, res *domain.ResultSetT, e *[]error) {
+	defer wg.Done()
 	if val, has := r.cache.Get("voicecall"); has == true {
-		v := val.([]domain.VoiceCallData)
-		return v, nil
+		res.VoiceCall = val.([]domain.VoiceCallData)
 	} else {
 		if err := r.parseData(ctx); err != nil {
-			return []domain.VoiceCallData{}, err
+			*e = append(*e, err)
+			return
 		}
 		r.cache.Set("voicecall", r.data, 0)
-		return r.data, nil
+		res.VoiceCall = r.data
 	}
 }
