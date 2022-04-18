@@ -10,7 +10,7 @@ COPY --from=builder /build/generator /build/monitoring /app/
 COPY web /app/web/
 COPY configs /app/configs/
 COPY wrapper.sh /app/
-RUN chown -R appuser /app
+RUN chown -R appuser /app && chmod +x /app/wrapper.sh
 USER appuser
 WORKDIR /app
 CMD ["./wrapper.sh", "&"]
