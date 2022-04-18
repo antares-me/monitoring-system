@@ -13,3 +13,13 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Test data
+billing.data
+email.data
+sms.data
+voice.data
+
+# Build data
+generator
+monitoring
